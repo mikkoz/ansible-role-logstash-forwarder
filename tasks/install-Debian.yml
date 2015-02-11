@@ -1,0 +1,31 @@
+---
+- name: Ensure build dependencies
+  apt: name="{{ item }}" state=present
+  with_items:
+    - git
+    - ruby
+    - ruby-dev
+- name: Clear install directory
+  file: path={{ logstash_tmp_install_directory }} state=absent
+- name: checkout build
+  git: repo=https://github.com/elasticsearch/logstash-forwarder.git dest="{{ logstash_tmp_install_directory }}"
+- name: perform build
+  shell: "{{ item }}"
+  with_items:
+    - gem install fpm
+    - make deb
+  args:
+    chdir: "{{ logstash_tmp_install_directory }}"
+- name: find package #the apt task doesn't seem to like fileglobs, hence this workaround
+  shell: ls {{ logstash_tmp_install_directory }}/*.deb
+  register: logstash_package_name
+- name: install package
+  apt: deb={{ logstash_package_name.stdout }} state=present
+
+
+# See: http://goo.gl/cz9Lnd
+- name: Install logstash-forwarder init script.
+  copy:
+    src: logstash-forwarder.deb.init
+    dest: /etc/init.d/logstash-forwarder
+    mode: 0755
