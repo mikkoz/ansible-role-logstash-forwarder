@@ -1,9 +1,4 @@
 ---
-- name: Add Elasticsearch apt key.
-  apt_key:
-    url: http://packages.elasticsearch.org/GPG-KEY-elasticsearch
-    state: present
-
 - name: Check if logstash-forwarder is already installed.
   stat: path=/etc/init.d/logstash-forwarder
   register: logstash_forwarder_installed

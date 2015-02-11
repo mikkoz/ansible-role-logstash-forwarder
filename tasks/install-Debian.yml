@@ -29,3 +29,6 @@
     src: logstash-forwarder.deb.init
     dest: /etc/init.d/logstash-forwarder
     mode: 0755
+
+ - name: Clear install directory
+   file: path={{ logstash_tmp_install_directory }} state=absent
