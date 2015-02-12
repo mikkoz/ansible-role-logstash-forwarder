@@ -8,7 +8,7 @@
 - name: Clear install directory
   file: path={{ logstash_tmp_install_directory }} state=absent
 - name: checkout build
-  git: repo=https://github.com/elasticsearch/logstash-forwarder.git dest="{{ logstash_tmp_install_directory }}"
+  git: repo=https://github.com/elasticsearch/logstash-forwarder.git dest="{{ logstash_tmp_install_directory }}" version=c61f261977737937482ad2517292eb4d7b318a34
 - name: perform build
   shell: "{{ item }}"
   with_items:
